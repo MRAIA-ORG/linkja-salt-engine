@@ -6,7 +6,6 @@ import org.linkja.core.FileHelper;
 import org.linkja.core.LinkjaException;
 import org.linkja.core.Site;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.FieldSetter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
