@@ -92,7 +92,12 @@
                 <version>${maven.surefire.version}</version>
                 <configuration>
                     <!-- Specify the library path to include the liblinkjacrypto library -->
-                    <argLine>-Djava.library.path=./lib</argLine>
+                    <argLine>
+					-Djava.library.path=./lib
+					-Xshare:off 
+					-javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"
+					--enable-native-access=ALL-UNNAMED
+					</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -103,6 +108,7 @@
                         <id>copy-dependencies</id>
                         <phase>prepare-package</phase>
                         <goals>
+							<goal>properties</goal>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
@@ -153,6 +159,16 @@
                     </archive>
                 </configuration>
             </plugin>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-compiler-plugin</artifactId>
+			  <version>3.15.0</version>
+			  <configuration>
+				<compilerArgs>
+				  <arg>-Xlint:deprecation</arg>
+				</compilerArgs>
+			  </configuration>
+			</plugin>
         </plugins>
     </build>
 </project>

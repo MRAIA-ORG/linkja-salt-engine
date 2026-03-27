@@ -184,7 +184,8 @@ public class SaltEngine {
     }
 
     try (BufferedReader csvReader = new BufferedReader(new FileReader(siteFile))) {
-      CSVParser parser = CSVParser.parse(csvReader, CSVFormat.DEFAULT.withDelimiter(SITE_FILE_DELIMITER));
+	  CSVFormat parsedFormat = CSVFormat.Builder.create().setDelimiter(SITE_FILE_DELIMITER).get();
+      CSVParser parser = CSVParser.parse(csvReader, parsedFormat);
       for (CSVRecord csvRecord : parser) {
         if (csvRecord.size() != SITE_FILE_COLUMN_COUNT) {
           throw new LinkjaException(String.format("Row %d has %d columns.  The site control file must have exactly %d columns on each row: Site ID, Site Name",
