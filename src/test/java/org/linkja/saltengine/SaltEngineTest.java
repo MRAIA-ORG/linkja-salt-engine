@@ -1,7 +1,6 @@
 package org.linkja.saltengine;
 
 import org.junit.jupiter.api.Test;
-import org.linkja.core.CryptoHelper;
 import org.linkja.core.FileHelper;
 import org.linkja.core.LinkjaException;
 import org.linkja.core.Site;

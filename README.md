@@ -1,13 +1,24 @@
 # linkja-salt-engine
 
 ## Building
-linkja-salt-engine was built using Java JDK 10 (specifically [OpenJDK](https://openjdk.java.net/)).  It can be opened from within an IDE like Eclipse or IntelliJ IDEA and compiled, or compiled from the command line using [Maven](https://maven.apache.org/).
+linkja-salt-engine needs Java 25 (e.g. [Eclipse Temurin](https://adoptium.net/)) and [Maven](https://maven.apache.org/).
 
-You can build linkja-salt-engine via Maven:
+The tests call the linkja C library. The `lib` folder holds a Windows build and an Intel-only macOS build. On any other machine, compile the library from the `develop` branch of [linkja-crypto](https://github.com/MRAIA-ORG/linkja-crypto). The public build is enough, because linkja-salt-engine uses only functions that it holds (token generation and the library signature). It needs OpenSSL 3, CMake and cmocka (e.g. `brew install openssl@3 cmake cmocka`). From a linkja-crypto clone beside this one, with `JAVA_HOME` set to Java 25:
 
-`mvn clean package`
+```
+cmake . -DINCLUDE_SECRETS=OFF -DCMAKE_BUILD_TYPE=Release
+make linkjacrypto
+```
 
-This will compile the code, run all unit tests, and create an executable JAR file under the .\target folder with all dependency JARs included.  The JAR will be named something like `SaltEngine-1.0-jar-with-dependencies.jar`.
+On macOS, add `-DOPENSSL_ROOT_DIR="$(brew --prefix openssl@3)"` to the `cmake` command.
+
+Then, from this folder:
+
+`mvn clean package -Dnative.lib.dir=../linkja-crypto/target`
+
+This compiles the code, runs all unit tests, and puts the JARs in the `target` folder, e.g. `target/SaltEngine-0.5-jar-with-dependencies.jar`, which holds all dependency JARs. If you do not give `native.lib.dir`, the tests look for the library in the `lib` folder.
+
+CI runs the same steps on each pull request. See `.github/workflows/ci.yml`.
 
 ## Program Use
 You can run the executable JAR file using the standard Java command:

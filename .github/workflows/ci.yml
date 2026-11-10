@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [develop, master]
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # The C library fixes for OpenSSL 3 are on linkja-crypto develop only.
+      - uses: actions/checkout@v7
+        with:
+          repository: MRAIA-ORG/linkja-crypto
+          ref: develop
+          path: linkja-crypto
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      # linkja-crypto CMake always adds its C tests on Linux and macOS, so cmocka is required.
+      - name: Install OpenSSL 3, CMake and cmocka
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev cmake libcmocka-dev
+
+      # linkja-salt-engine calls only generateToken and getLibrarySignature, so the public build is enough.
+      - name: Compile the public build of the C library
+        working-directory: linkja-crypto
+        run: |
+          cmake . -DINCLUDE_SECRETS=OFF -DCMAKE_BUILD_TYPE=Release
+          make linkjacrypto
+
+      - name: Test and package linkja-salt-engine
+        run: mvn -B verify -Dnative.lib.dir="$GITHUB_WORKSPACE/linkja-crypto/target"
