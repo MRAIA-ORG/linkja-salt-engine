@@ -3,7 +3,7 @@
 ## Building
 linkja-salt-engine needs Java 25 (e.g. [Eclipse Temurin](https://adoptium.net/)) and [Maven](https://maven.apache.org/).
 
-The tests call the linkja C library. The `lib` folder holds a Windows build and an Intel-only macOS build. On any other machine, compile the library from the `develop` branch of [linkja-crypto](https://github.com/MRAIA-ORG/linkja-crypto). The public build is enough, because linkja-salt-engine uses only functions that it holds (token generation and the library signature). It needs OpenSSL 3, CMake and cmocka (e.g. `brew install openssl@3 cmake cmocka`). From a linkja-crypto clone beside this one, with `JAVA_HOME` set to Java 25:
+The tests call the linkja C library. The `lib` folder holds a Windows build and an Intel-only macOS build. On any other machine, compile the library from the `develop` branch of [linkja-crypto](https://github.com/MRAIA-ORG/linkja-crypto). The public build is enough, because linkja-salt-engine uses only functions that it holds (token generation and the library signature). It needs OpenSSL 3 and CMake (e.g. `brew install openssl@3 cmake`). From a linkja-crypto clone beside this one, with `JAVA_HOME` set to Java 25:
 
 ```
 cmake . -DINCLUDE_SECRETS=OFF -DCMAKE_BUILD_TYPE=Release

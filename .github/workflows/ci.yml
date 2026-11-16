@@ -27,9 +27,8 @@ jobs:
           java-version: '25'
           cache: maven
 
-      # linkja-crypto CMake always adds its C tests on Linux and macOS, so cmocka is required.
-      - name: Install OpenSSL 3, CMake and cmocka
-        run: sudo apt-get update && sudo apt-get install -y libssl-dev cmake libcmocka-dev
+      - name: Install OpenSSL 3 and CMake
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev cmake
 
       # linkja-salt-engine calls only generateToken and getLibrarySignature, so the public build is enough.
       - name: Compile the public build of the C library
